@@ -13,7 +13,7 @@ exports.createAccount = async(req, res) => {
     const hashedPass = await byCrypt.hash(req.body.password, lvlup)
 
     const { error } = userValidation(req.body);
-    const exists = await userController.findOne({name: req.body.name})    
+    const exists = await userController.findOne({email: req.body.email})    
     const userAccount = userController({...req.body, password: hashedPass});
 
     try {
@@ -46,7 +46,7 @@ exports.AccountLogin = async (req, res) => {
         }else{            
             const validPass = await byCrypt.compare(req.body.password, userInfo.password);    
             if(!validPass) {
-                return res.status(501).send({message:"Invalid email or password!", status: "error"});
+                return res.status(501).send({message:"Invalid credentials!", status: "error"});
             }else{
                 const accessToken = jwt.sign(
                     {
